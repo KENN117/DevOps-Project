@@ -1,65 +1,46 @@
-let data; // Global variable to hold the JSON data after loading
+const express = require('express');
+const router = express.Router();
+const fs = require('fs');
+const path = require('path');
 
-// Function to load JSON data from an external file
-async function loadData() {
-    try {
-        const response = await fetch('data/db.json'); // Updated path to 'data/db.json'
-        data = await response.json();
-        console.log('Loaded db.json');
-    } catch (error) {
-        console.error('Error loading JSON data:', error);
-    }
+// Path to the database file
+const dbPath = path.join(__dirname, '../data/db.json');
+
+// Helper function to read the database
+function readDatabase() {
+    const data = fs.readFileSync(dbPath, 'utf-8');
+    return JSON.parse(data);
 }
 
-// Function to search for a student by name or ID
-function searchStudent() {
-    if (!data) {
-        alert("Data is still loading. Please try again in a moment.");
-        return;
+// GET endpoint to search for a student by ID or name
+router.get('/students/search', (req, res) => {
+    const { query } = req.query; // Query parameter
+
+    if (!query) {
+        return res.status(400).json({ error: "Query parameter is required" });
     }
 
-    const input = document.getElementById("searchInput").value.trim().toLowerCase();
-    const resultDiv = document.getElementById("result");
-    resultDiv.innerHTML = ""; // Clear previous results
+    const db = readDatabase();
 
-    if (input === '') {
-        alert("No input entered in search!");
-        return;
-    }
-
-    console.log(input);
-    // Find the student by ID or name
-    const student = data.students.find(s =>
-        s.studentID.toString() === input || s.name.toLowerCase().includes(input)
+    // Search for the student
+    const student = db.students.find(s =>
+        s.studentID.toString() === query || s.name.toLowerCase().includes(query.toLowerCase())
     );
-    console.log(student);
 
-    // Display the result
-    if (student) {
-        // Find classes the student is enrolled in
-        const studentClasses = data.enrollment
-            .filter(e => e.enrolledStudentID === student.studentID)
-            .map(e => data.classes.find(c => c.classID === e.enrolledClassID))
-            .filter(Boolean);
-
-        let studentDetails = `<h3>Student Details</h3>`;
-        studentDetails += `<p><strong>ID:</strong> ${student.studentID}</p>`;
-        studentDetails += `<p><strong>Name:</strong> ${student.name}</p>`;
-
-        if (studentClasses.length > 0) {
-            studentDetails += `<h4>Classes Enrolled</h4>`;
-            studentClasses.forEach(c => {
-                studentDetails += `<p><strong>Subject:</strong> ${c.subject}, <strong>Date:</strong> ${c.date}, <strong>Tutor:</strong> ${c.tutor}</p>`;
-            });
-        } else {
-            studentDetails += `<p>No classes found for this student.</p>`;
-        }
-
-        resultDiv.innerHTML = studentDetails;
-    } else {
-        resultDiv.innerHTML = "<p>No student found with that ID or name.</p>";
+    if (!student) {
+        return res.status(404).json({ error: "No student found with that ID or name" });
     }
-}
 
-// Call loadData to load the data when the page loads
-window.onload = loadData;
+    // Find classes the student is enrolled in
+    const studentClasses = db.enrollment
+        .filter(e => e.enrolledStudentID === student.studentID)
+        .map(e => db.classes.find(c => c.classID === e.enrolledClassID))
+        .filter(Boolean);
+
+    res.status(200).json({
+        student,
+        classes: studentClasses
+    });
+});
+
+module.exports = router;

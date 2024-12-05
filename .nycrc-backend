@@ -4,7 +4,7 @@
 "html"
 ],
 "include": [
-"util/search.js"
+"Util/search.js"
 ],
 "reportDir": "coverage/backend",
 "branches": 80,

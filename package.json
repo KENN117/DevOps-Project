@@ -4,7 +4,7 @@
   "description": "This is a group project for the DVOPS subject. Group members: Daryl, Hilman, Kenneth, Xave",
   "main": "index.js",
   "scripts": {
-    "test": "nyc --nycrc-path .nycrc-backend mocha"
+    "backend-test": "nyc --nycrc-path .nycrc-backend mocha"
   },
   "keywords": [],
   "author": "",
