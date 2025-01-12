@@ -45,5 +45,3 @@ async function searchStudent() {
     }
 }
 
-// Attach event listener to the search button
-document.getElementById("searchButton").addEventListener("click", searchStudent);
