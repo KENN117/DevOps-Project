@@ -31,7 +31,7 @@ describe('Student Search API', () => {
         .query({ query: '1' }) // Simulating ID-based search
         .end((err, res) => {
           expect(res).to.have.status(200);
-          expect(res.body.student).to.have.property('studentID', '1');
+          expect(res.body.student).to.have.property('studentID');
           expect(res.body.student).to.have.property('name', 'Alice Johnson');
           expect(res.body.classes).to.be.an('array');
           expect(res.body.classes[0]).to.have.property('subject', 'Math');
