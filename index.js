@@ -23,6 +23,9 @@ app.get("/util/search.js", (req, res) => {
   res.sendFile(path.join(__dirname, "util", "search.js"));
 });
 
+const searchStudentRoute = require("./Util/search");
+app.use('/api', searchStudentRoute);
+
 // Serve db.json from the data directory
 app.get("/data/db.json", (req, res) => {
   res.sendFile(dbPath);
