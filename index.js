@@ -20,7 +20,7 @@ app.use("/leave", leaveAppRoutes);
 
 // Serve search.js from the util directory
 app.get("/util/search.js", (req, res) => {
-  res.sendFile(path.join(__dirname, "util", "search.js"));
+  res.sendFile(path.join(__dirname, "Util", "search.js"));
 });
 
 const searchStudentRoute = require("./Util/search");
