@@ -14,6 +14,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static("public"));
 
+const statusMonitor = require('express-status-monitor');
+app.use(statusMonitor());
+
 // Import leave application routes from leaveapp.js
 const leaveAppRoutes = require("./Util/leaveapp");
 app.use("/leave", leaveAppRoutes);
