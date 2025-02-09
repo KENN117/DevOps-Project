@@ -1,0 +1,16 @@
+module.exports = {
+    apps: [
+      {
+        name: "DVOPS Part 4",      // Name of your application
+        script: "index.js", // Your main server file (change if necessary)
+        instances: "5",    // Run as many instances as CPU cores
+        exec_mode: "cluster", // Enable multi-threading for performance
+        autorestart: true,   // Restart on crash
+        watch: false,        // Disable file watching (handled by CI/CD)
+        max_memory_restart: "1G", // Restart if memory usage exceeds 1GB
+        env: {
+          NODE_ENV: "production",
+        },
+      },
+    ],
+  };
