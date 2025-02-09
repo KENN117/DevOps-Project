@@ -7,7 +7,7 @@ COPY package*.json ./
 # Install dependencies
 RUN npm ci
 # Install app dependencies
-RUN npm install pm2@latest-g
+RUN npm install pm2@latest -g
 # Bundle app source
 COPY . .
 # Expose the port your app runs on
